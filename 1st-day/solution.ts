@@ -1,7 +1,7 @@
 const text = await Deno.readTextFile("./input.txt");
 
 const depths = text
-  .split('\n')
+  .split("\n")
   .map((string) => parseInt(string, 10));
 
 let result = 0;
