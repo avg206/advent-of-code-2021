@@ -65,19 +65,31 @@ const createBoard = (strings: string[]) => {
 
     return sum * winningNumber;
   };
+  const renderSnapshot = () => {
+    for (let i = 0; i < 5; i++) {
+      const line = [];
+      for (let j = 0; j < 5; j++) {
+        line.push(checkBit(checks[i], j) ? 1 : 0);
+      }
+      console.log(line.join(" "));
+    }
+  };
 
   return {
     isWin,
     addNumber,
     calculateScore,
+    renderSnapshot,
   };
 };
+
+type BoardInterface = ReturnType<typeof createBoard>;
 
 const lines = text.split("\n");
 const numbers = lines[0].split(",").map((string) => parseInt(string, 10));
 
 // Create boards
-const boards: ReturnType<typeof createBoard>[] = [];
+const boards: BoardInterface[] = [];
 let index = 2;
 while (index < lines.length - 1) {
   const newBoard = lines.slice(index, index + 5);
@@ -87,20 +99,31 @@ while (index < lines.length - 1) {
   index += 6;
 }
 
+const winners = new Array(boards.length).fill(0);
+
 // Apply numbers
 for (let i = 0; i < numbers.length; i++) {
-  const winner = boards.findIndex((board) => {
-    board.addNumber(numbers[i]);
-    return board.isWin();
-  });
+  boards.forEach((board) => board.addNumber(numbers[i]));
 
-  if (winner !== -1) {
-    console.log("Winner board:");
-    console.log(winner + 1);
-    console.log("Winning number:");
-    console.log(numbers[i]);
-    console.log("Score:");
-    console.log(boards[winner].calculateScore(numbers[i]));
-    break;
+  for (let j = 0; j < boards.length; j++) {
+    if (winners[j] === 1) {
+      continue;
+    }
+
+    if (boards[j].isWin()) {
+      winners[j] = 1;
+
+      console.log("Step:");
+      console.log(i + 1);
+      console.log("Winner board:");
+      console.log(j + 1);
+      console.log("Winning number:");
+      console.log(numbers[i]);
+      console.log("Score:");
+      console.log(boards[j].calculateScore(numbers[i]));
+      // console.log("Snapshot:");
+      // boards[j].renderSnapshot();
+      console.log("---------------");
+    }
   }
 }
