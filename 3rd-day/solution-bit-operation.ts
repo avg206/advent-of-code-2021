@@ -2,14 +2,12 @@ const text = await Deno.readTextFile("./input.txt");
 
 const dec2bin = (number: number) => number.toString(2);
 
-const numbers = text
-  .split("\n")
-  .map((string) => parseInt(string, 2));
+const numbers = text.split("\n").map((string) => parseInt(string, 2));
 
 const numbersAmount = numbers.length;
 const numberLength = Math.ceil(Math.log2(Math.max.apply(null, numbers)));
 
-const setBit = (number: number, index: number) => number | (1 << (index));
+const setBit = (number: number, index: number) => number | (1 << index);
 
 const checkBit = (number: number, index: number) =>
   (number & (1 << index)) !== 0;

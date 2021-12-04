@@ -3,8 +3,7 @@ const text = await Deno.readTextFile("./input.txt");
 // boolean - should we take one
 type Comparator = (oneCount: number, zeroCount: number) => boolean;
 
-const numbers = text
-  .split("\n");
+const numbers = text.split("\n");
 
 const numberLength = numbers[0].length;
 
@@ -12,10 +11,10 @@ const foo = (
   digitPart: string,
   numbers: string[],
   currentIndex: number,
-  comparator: Comparator,
+  comparator: Comparator
 ): string => {
-  const newNumbers = numbers.filter((string) =>
-    string.indexOf(digitPart) === 0
+  const newNumbers = numbers.filter(
+    (string) => string.indexOf(digitPart) === 0
   );
 
   if (newNumbers.length === 1) {

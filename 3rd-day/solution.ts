@@ -1,7 +1,6 @@
 const text = await Deno.readTextFile("./input.txt");
 
-const numbers = text
-  .split("\n").map((string) => string.split(""));
+const numbers = text.split("\n").map((string) => string.split(""));
 
 const numberLength = numbers[0].length;
 

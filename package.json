@@ -1,0 +1,11 @@
+{
+  "name": "advent-of-code-2021",
+  "version": "1.0.0",
+  "main": "",
+  "repository": "git@github.com:avg206/advent-of-code.git",
+  "author": "Anatoli Huseu <avg.tolik@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "prettier": "^2.5.0"
+  }
+}
