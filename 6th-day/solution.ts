@@ -1,32 +1,20 @@
 const text = await Deno.readTextFile("./input.txt");
 
-const renderArray = (array: number[][]) => {
-  console.log(
-    JSON.stringify(
-      array.map((line) =>
-        line.map((number) => (number === 0 ? "." : number)).join(" ")
-      ),
-      null,
-      2
-    )
-  );
-};
-
-const fishes = text.split(",").map((string) => parseInt(string, 10));
+const fish = text.split(",").map((string) => parseInt(string, 10));
 
 const DAYS_LIMIT = 256;
 let days = 0;
 
 while (days < DAYS_LIMIT) {
   let i = 0;
-  let length = fishes.length;
+  let length = fish.length;
 
   while (i < length) {
-    if (fishes[i] === 0) {
-      fishes[i] = 6;
-      fishes.push(8);
+    if (fish[i] === 0) {
+      fish[i] = 6;
+      fish.push(8);
     } else {
-      fishes[i]--;
+      fish[i]--;
     }
 
     i++;
@@ -36,6 +24,6 @@ while (days < DAYS_LIMIT) {
 }
 
 console.log("Fish count:");
-console.log(fishes.length);
+console.log(fish.length);
 console.log("Fish:");
-console.log(fishes);
+console.log(fish);
