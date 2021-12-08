@@ -34,6 +34,11 @@ const findStringsByLength = (digs: string[], length: number): string[] => {
  * 7. Find 6 dig, find diff with 8 for both, check if 5 contain diff, if yes, it's 0, if no, it's 9
  */
 
+interface NumberProcessor {
+  number: number;
+  solver: () => string | undefined;
+}
+
 const processLine = (line: string): number => {
   const stringToNumber: Record<string, number> = {};
   const numberToString: Record<number, string> = {};
@@ -56,62 +61,78 @@ const processLine = (line: string): number => {
     .map((dig) => dig.split("").sort().join(""))
     .sort();
 
-  // Find 1
-  const oneString = findStringsByLength(digits, 2)[0];
-  assignStringToNumber(oneString, 1);
+  const solvers: NumberProcessor[] = [
+    {
+      number: 1,
+      solver: () => findStringsByLength(digits, 2)[0],
+    },
+    {
+      number: 7,
+      solver: () => findStringsByLength(digits, 3)[0],
+    },
+    {
+      number: 8,
+      solver: () => findStringsByLength(digits, 7)[0],
+    },
+    {
+      number: 6,
+      solver: () =>
+        findStringsByLength(digits, 6).find(
+          (string) => findDiff(string, numberToString[1]).length === 5
+        ),
+    },
+    {
+      number: 3,
+      solver: () =>
+        findStringsByLength(digits, 5).find(
+          (string) => findDiff(string, numberToString[1]).length === 3
+        ),
+    },
+    {
+      number: 5,
+      solver: () =>
+        findStringsByLength(digits, 5).find(
+          (string) => findDiff(numberToString[6], string).length === 1
+        ),
+    },
+    {
+      number: 9,
+      solver: () =>
+        findStringsByLength(digits, 6)
+          .filter((string) => stringToNumber[string] === undefined)
+          .find((string) => {
+            const diff = findDiff(numberToString[8], string);
+            const newDiff = findDiff(numberToString[5], diff);
 
-  // Find 7
-  const sevenString = findStringsByLength(digits, 3)[0];
-  assignStringToNumber(sevenString, 7);
+            return newDiff.length === numberToString[5].length;
+          }),
+    },
+    {
+      number: 0,
+      solver: () =>
+        findStringsByLength(digits, 6).find(
+          (string) => !stringToNumber[string]
+        ),
+    },
+    {
+      number: 4,
+      solver: () =>
+        findStringsByLength(digits, 4).find(
+          (string) => !stringToNumber[string]
+        ),
+    },
+    {
+      number: 2,
+      solver: () =>
+        digits.find((string) => stringToNumber[string] === undefined),
+    },
+  ];
 
-  // Find 8
-  const eightString = findStringsByLength(digits, 7)[0];
-  assignStringToNumber(eightString, 8);
+  solvers.forEach(({ number, solver }) => {
+    const string = solver();
 
-  // Find 6
-  const sixString = findStringsByLength(digits, 6).find(
-    (string) => findDiff(string, numberToString[1]).length === 5
-  );
-  assignStringToNumber(sixString, 6);
-
-  // Find 3 and 5
-  const threeString = findStringsByLength(digits, 5).find(
-    (string) => findDiff(string, numberToString[1]).length === 3
-  );
-  assignStringToNumber(threeString, 3);
-
-  const fiveString = findStringsByLength(digits, 5).find(
-    (string) => findDiff(numberToString[6], string).length === 1
-  );
-  assignStringToNumber(fiveString, 5);
-
-  // Find 0 and 9
-  const nineString = findStringsByLength(digits, 6)
-    .filter((string) => stringToNumber[string] === undefined)
-    .find((string) => {
-      const diff = findDiff(numberToString[8], string);
-      const newDiff = findDiff(numberToString[5], diff);
-
-      return newDiff.length === numberToString[5].length;
-    });
-  assignStringToNumber(nineString, 9);
-
-  const zeroString = findStringsByLength(digits, 6).find(
-    (string) => !stringToNumber[string]
-  );
-  assignStringToNumber(zeroString, 0);
-
-  // Find 4
-  const fourString = findStringsByLength(digits, 4).find(
-    (string) => !stringToNumber[string]
-  );
-  assignStringToNumber(fourString, 4);
-
-  // Find 2
-  const twoString = digits.find(
-    (string) => stringToNumber[string] === undefined
-  );
-  assignStringToNumber(twoString, 2);
+    assignStringToNumber(string, number);
+  });
 
   const resultNumber = input[1]
     .split(" ")
@@ -123,6 +144,7 @@ const processLine = (line: string): number => {
 };
 
 const lines = text.trim().split("\n");
+
 const answer = lines.reduce((acc, line) => acc + processLine(line), 0);
 
 console.log("Answer:");
